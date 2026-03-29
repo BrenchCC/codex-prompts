@@ -1,130 +1,85 @@
-# codex-prompt
+# Code Agent Configuration
 
-一个面向多代理协作场景的角色 Prompt 集合仓库。
+一个用于记录和维护我个人 AI code agent 配置的仓库。
 
-仓库中的每个 `.md` 文件定义一个独立角色，例如需求分析、规划、执行、架构评审、代码审查、测试、文档编写与安全审查。它们适合用于：
+这个仓库不再只是零散的角色 Prompt 集合，而是面向日常开发工作流的 agent 配置资产库。当前内容主要覆盖：
 
-- 为 AI 编码代理提供稳定的角色边界
-- 将复杂任务拆分给不同职责的子代理
-- 统一团队内的 Prompt 风格、输出格式与协作协议
-- 复用一套可维护的角色模板，而不是为每次任务重复写系统提示词
+- `Codex` 的代理规则与行为约束
+- `Claude` 的配置文件与偏好说明
+- 一组可复用的角色 Prompt 模板
+
+这些文件用于沉淀我在 AI 编码协作中的约定，而不是保存业务代码。
 
 ## 仓库结构
 
-当前仓库以角色文件为核心，未包含运行时代码：
+### `codex/`
 
-- `analyst.md`：需求澄清与前置分析
-- `planner.md`：工作计划生成与确认
-- `architect.md`：只读架构分析与根因诊断
-- `executor.md`：端到端实现与验证
-- `critic.md`：计划审查与风险质疑
-- `code-reviewer.md`：代码评审
-- `build-fixer.md`：构建或编译错误修复
-- `debugger.md`：问题定位与回归分析
-- `test-engineer.md`：测试策略与测试补强
-- `qa-tester.md`：交互式验证
-- `writer.md`：README、注释与技术文档编写
+存放 Codex 相关配置。
 
-此外还包含产品、设计、性能、安全、API、信息架构、UX、视觉分析、Git 等方向的专用角色文件。
+- `codex/AGENTS.md`：Codex 在本仓库中的行为规范、语言偏好、Python 编码约定、Conda 使用方式等
 
-## 角色分工
+### `claude/`
 
-这些 Prompt 的核心思路不是“一个代理做所有事”，而是把职责边界写清楚。
+存放 Claude Code 相关配置。
 
-典型协作链路如下：
+- `claude/CLAUDE.md`：Claude 的响应偏好与配置入口
+- `claude/rules/preferences.md`：Claude 使用的代码风格与执行约定
 
-1. `analyst` 先识别目标、约束和缺失信息
-2. `planner` 生成 3 到 6 步的可执行计划
-3. `critic` 对计划做挑战，提前暴露风险
-4. `executor` 按最小可行改动实现需求
-5. `architect` 或 `code-reviewer` 做只读复核
-6. `verifier`、`qa-tester`、`test-engineer` 补足验证证据
-7. `writer` 整理 README、迁移说明或交付文档
+### `prompts/`
 
-这种拆分方式尤其适合以下场景：
+存放按职责拆分的角色 Prompt 模板，用于多代理协作或按需切换角色。
 
-- 中大型仓库改动
-- 需要严格验证和留痕的任务
-- 希望减少“既规划又实现又审查”导致的角色混叠
-- 希望把 Prompt 模板沉淀为团队资产
+当前包含的角色方向包括：
 
-## 文件特点
+- 分析与规划：`analyst`、`planner`、`critic`
+- 实现与修复：`executor`、`build-fixer`、`debugger`
+- 审查与验证：`architect`、`code-reviewer`、`verifier`、`qa-tester`、`test-engineer`
+- 产品与设计：`product-manager`、`product-analyst`、`designer`、`ux-researcher`
+- 质量与专项能力：`security-reviewer`、`performance-reviewer`、`quality-reviewer`、`quality-strategist`
+- 其他辅助角色：`writer`、`vision`、`researcher`、`git-master`、`style-reviewer`、`api-reviewer` 等
 
-多数角色文件包含以下内容：
+## 这个仓库记录什么
 
-- 角色定义：明确该角色该做什么、不该做什么
-- 成功标准：约束产出质量
-- 调查协议：先看代码还是先问用户、如何收集证据
-- 工具使用建议：什么时候用搜索、诊断、测试、Git 等工具
-- 输出格式：统一最终回复结构，便于集成
-- Failure Modes：列出常见失误，降低代理跑偏概率
+我会在这里维护与 AI code agent 协作有关的长期配置，例如：
 
-这使得每个角色既像“人格”，也像“执行 SOP”。
+- 响应语言、输出风格、个性化前缀
+- Python 代码格式偏好
+- Prompt 模板的职责边界
+- 多代理协作时的角色拆分方式
+- 不同 agent 的配置文件组织方式
+
+它更接近一个个人 agent workspace profile，而不是通用 SDK 或应用项目。
 
 ## 使用方式
 
-你可以把这些文件直接当作代理的系统提示词、角色提示词，或者作为你现有代理框架中的模板库。
+### 1. 作为个人配置仓库
 
-常见使用方式包括：
+把这里的文件同步到本地 agent 环境，用来统一 Codex、Claude Code 等工具的行为。
 
-### 1. 直接复制
+### 2. 作为 Prompt 模板库
 
-将某个角色文件内容复制到你的 Agent/System Prompt 中，例如：
+按任务类型选择 `prompts/` 下的角色文件，作为 system prompt 或 worker prompt 的基础模板。
 
-```text
-Use the prompt from `executor.md` as the worker's system instruction.
-```
+### 3. 作为可追踪的配置历史
 
-### 2. 作为多代理模板库
+通过 Git 记录各类 agent 配置的变更，方便回溯什么时候调整了规则、目录结构或协作方式。
 
-根据任务类型动态选择角色，例如：
+## 适用场景
 
-- 需求不清时使用 `analyst.md`
-- 用户明确要求“先出方案”时使用 `planner.md`
-- 用户要求“直接修”时使用 `executor.md`
-- 实现结束后再调用 `code-reviewer.md` 或 `verifier.md`
+这个仓库适合我自己做以下事情：
 
-### 3. 作为团队 Prompt 规范
+- 统一不同 AI code agent 的行为习惯
+- 维护稳定可复用的角色 Prompt
+- 管理个人开发工作流中的 agent 配置
+- 把临时经验沉淀成可版本化的配置资产
 
-如果你在维护一套内部 Agent 工作流，可以把本仓库作为统一提示词来源，避免不同代理的行为风格不一致。
+## 后续可以继续补充
 
-## 推荐工作流
-
-对于非简单任务，推荐使用下面的顺序：
-
-```text
-analyst -> planner -> critic -> executor -> verifier -> writer
-```
-
-对于调试问题，推荐：
-
-```text
-debugger -> architect -> executor -> qa-tester
-```
-
-对于上线前检查，推荐：
-
-```text
-code-reviewer -> security-reviewer -> quality-strategist -> verifier
-```
-
-## 适用对象
-
-这个仓库适合：
-
-- 使用 Codex、Claude Code、Cursor、OpenAI Agents 或自建代理系统的开发者
-- 想把 AI 协作过程模块化、可复用、可审计的团队
-- 希望沉淀“角色级 Prompt 资产”而不是零散临时提示词的项目维护者
-
-## 后续可扩展方向
-
-如果你打算继续演进这个仓库，比较自然的方向包括：
-
-- 增加 `examples/` 展示每个角色的输入输出示例
-- 增加 `workflows/` 沉淀常见编排方案
-- 增加版本记录，说明角色 Prompt 的变更历史
-- 补充与具体平台的集成示例，例如 Codex、Claude Code 或自定义 orchestrator
+- 增加不同 agent 的安装或同步说明
+- 增加 `examples/` 展示 Prompt 实际用法
+- 增加 `workflows/` 记录固定协作链路
+- 增加变更日志，说明配置演进历史
 
 ## License
 
-如果你准备公开分发，建议补充许可证文件，例如 `MIT` 或 `Apache-2.0`。
+MIT License

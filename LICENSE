@@ -1,0 +1,6 @@
+chore: reorganize prompt files and add agent config docs
+
+- move role prompt markdown files into the prompts/ directory
+- add Claude and Codex configuration documentation
+- update .gitignore to keep agent config files tracked
+
